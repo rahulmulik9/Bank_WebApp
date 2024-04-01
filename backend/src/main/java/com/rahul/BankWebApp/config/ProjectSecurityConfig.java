@@ -45,10 +45,11 @@ public class ProjectSecurityConfig {
 //
 //    }
 
-    @Bean
-    public UserDetailsManager userDetailsManager(DataSource dataSource){
-        return new JdbcUserDetailsManager(dataSource);
-    }
+
+//    @Bean
+//    public UserDetailsManager userDetailsManager(DataSource dataSource){
+//        return new JdbcUserDetailsManager(dataSource);
+//    }
 
 
     //Password encoder are mandatory
