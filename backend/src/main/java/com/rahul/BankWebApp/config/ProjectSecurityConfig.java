@@ -23,10 +23,13 @@ public class ProjectSecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(request -> request.requestMatchers("/account", "/balance", "/card", "loan").authenticated()
-                        .requestMatchers("/contact", "/notice").permitAll())
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(request -> request.requestMatchers("/account", "/balance", "/card", "loan").authenticated()
+                        .requestMatchers("/contact", "/notice", "/register").permitAll())
                 .httpBasic(withDefaults())
-                .formLogin(withDefaults());
+                .formLogin(withDefaults())
+        ;
         return http.build();
 
     }
@@ -54,7 +57,7 @@ public class ProjectSecurityConfig {
 
     //Password encoder are mandatory
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
