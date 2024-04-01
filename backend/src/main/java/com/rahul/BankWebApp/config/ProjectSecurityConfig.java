@@ -10,7 +10,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -26,21 +30,28 @@ public class ProjectSecurityConfig {
         return http.build();
 
     }
+//
+//   @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        UserDetails admin = User.withUsername("admin")
+//                .password("12345")
+//                .authorities("admin")
+//                .build();
+//        UserDetails user = User.withUsername("user")
+//                .password("12345")
+//                .authorities("read")
+//                .build();
+//        return new InMemoryUserDetailsManager(admin, user);
+//
+//    }
 
-   @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails admin = User.withUsername("admin")
-                .password("12345")
-                .authorities("admin")
-                .build();
-        UserDetails user = User.withUsername("user")
-                .password("12345")
-                .authorities("read")
-                .build();
-        return new InMemoryUserDetailsManager(admin, user);
-
+    @Bean
+    public UserDetailsManager userDetailsManager(DataSource dataSource){
+        return new JdbcUserDetailsManager(dataSource);
     }
 
+
+    //Password encoder are mandatory
     @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
