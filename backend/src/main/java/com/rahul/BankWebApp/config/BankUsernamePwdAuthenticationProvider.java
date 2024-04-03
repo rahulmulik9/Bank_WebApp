@@ -1,6 +1,6 @@
 package com.rahul.BankWebApp.config;
 
-import com.rahul.BankWebApp.entity.Customer;
+import com.rahul.BankWebApp.model.Customer;
 import com.rahul.BankWebApp.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class EazyBankUsernamePwdAuthenticationProvider implements AuthenticationProvider {
+public class BankUsernamePwdAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -45,7 +45,6 @@ public class EazyBankUsernamePwdAuthenticationProvider implements Authentication
 
     @Override
     public boolean supports(Class<?> authentication) {
-        //this tell that support Username and password authentication token which use username and password
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
