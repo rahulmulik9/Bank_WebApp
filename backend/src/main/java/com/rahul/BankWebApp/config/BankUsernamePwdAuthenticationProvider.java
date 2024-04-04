@@ -33,6 +33,7 @@ public class BankUsernamePwdAuthenticationProvider implements AuthenticationProv
         if (customer.size() > 0) {
             if (passwordEncoder.matches(pwd, customer.get(0).getPwd())) {
                 List<GrantedAuthority> authorities = new ArrayList<>();
+                //we are adding authorities inside simpleGrantedAuthorities
                 authorities.add(new SimpleGrantedAuthority(customer.get(0).getRole()));
                 return new UsernamePasswordAuthenticationToken(username, pwd, authorities);
             } else {
