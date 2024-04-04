@@ -1,5 +1,6 @@
 package com.rahul.BankWebApp.config;
 
+import com.rahul.BankWebApp.model.Authority;
 import com.rahul.BankWebApp.model.Customer;
 import com.rahul.BankWebApp.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class BankUsernamePwdAuthenticationProvider implements AuthenticationProvider {
@@ -32,10 +34,12 @@ public class BankUsernamePwdAuthenticationProvider implements AuthenticationProv
         List<Customer> customer = customerRepository.findByEmail(username);
         if (customer.size() > 0) {
             if (passwordEncoder.matches(pwd, customer.get(0).getPwd())) {
-                List<GrantedAuthority> authorities = new ArrayList<>();
                 //we are adding authorities inside simpleGrantedAuthorities
-                authorities.add(new SimpleGrantedAuthority(customer.get(0).getRole()));
-                return new UsernamePasswordAuthenticationToken(username, pwd, authorities);
+                //This is sample code when user have only one role
+                //in general user can have many role so use getGrantedAuthorities method
+                //List<GrantedAuthority> authorities = new ArrayList<>();
+               // authorities.add(new SimpleGrantedAuthority(customer.get(0).getRole()));
+                return new UsernamePasswordAuthenticationToken(username, pwd,/*authorities*/getGrantedAuthorities(customer.get(0).getAuthorities()));
             } else {
                 throw new BadCredentialsException("Invalid password!");
             }
@@ -44,6 +48,15 @@ public class BankUsernamePwdAuthenticationProvider implements AuthenticationProv
         }
     }
 
+    //fetching all granted authorities from database when user login.
+    //and store this authorities inside simpleGranted authorities
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (Authority authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return grantedAuthorities;
+    }
     @Override
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
