@@ -1,10 +1,10 @@
+create database eazybank;
 
+use eazybank;
 
-use bankwebapp;
-
-DROP TABLE IF EXISTS `users`;
-DROP TABLE IF EXISTS `authorities`;
-DROP TABLE IF EXISTS `customer`;
+drop table `users`;
+drop table `authorities`;
+drop table `customer`;
 
 CREATE TABLE `customer` (
   `customer_id` int NOT NULL AUTO_INCREMENT,
@@ -32,7 +32,7 @@ CREATE TABLE `accounts` (
 );
 
 INSERT INTO `accounts` (`customer_id`, `account_number`, `account_type`, `branch_address`, `create_dt`)
- VALUES (1, 1865764534, 'Savings', '123  Main Road, Pune', CURDATE());
+ VALUES (1, 1865764534, 'Savings', '123 Main Street, Pune', CURDATE());
 
 CREATE TABLE `account_transactions` (
   `transaction_id` varchar(200) NOT NULL,
@@ -137,15 +137,15 @@ VALUES ('Home Loan Interest rates reduced', 'Home loan interest rates are reduce
 CURDATE() - INTERVAL 30 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE(), null);
 
 INSERT INTO `notice_details` ( `notice_summary`, `notice_details`, `notic_beg_dt`, `notic_end_dt`, `create_dt`, `update_dt`)
-VALUES ('Net Banking Offers', 'Customers who will opt for Internet banking while opening a saving account will get a 50 amazon voucher',
+VALUES ('Net Banking Offers', 'Customers who will opt for Internet banking while opening a saving account will get a $50 amazon voucher',
 CURDATE() - INTERVAL 30 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE(), null);
 
 INSERT INTO `notice_details` ( `notice_summary`, `notice_details`, `notic_beg_dt`, `notic_end_dt`, `create_dt`, `update_dt`)
-VALUES ('Mobile App Downtime', 'The mobile application of the Bank will be down from 2AM-5AM on 10/02/2024 due to maintenance activities',
+VALUES ('Mobile App Downtime', 'The mobile application of the EazyBank will be down from 2AM-5AM on 12/05/2020 due to maintenance activities',
 CURDATE() - INTERVAL 30 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE(), null);
 
 INSERT INTO `notice_details` ( `notice_summary`, `notice_details`, `notic_beg_dt`, `notic_end_dt`, `create_dt`, `update_dt`)
-VALUES ('E Auction notice', 'There will be a e-auction on 12/02/2024 on the Bank website for all the stubborn arrears.Interested parties can participate in the e-auction',
+VALUES ('E Auction notice', 'There will be a e-auction on 12/08/2020 on the Bank website for all the stubborn arrears.Interested parties can participate in the e-auction',
 CURDATE() - INTERVAL 30 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE(), null);
 
 INSERT INTO `notice_details` ( `notice_summary`, `notice_details`, `notic_beg_dt`, `notic_end_dt`, `create_dt`, `update_dt`)
@@ -153,7 +153,7 @@ VALUES ('Launch of Millennia Cards', 'Millennia Credit Cards are launched for th
 CURDATE() - INTERVAL 30 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE(), null);
 
 INSERT INTO `notice_details` ( `notice_summary`, `notice_details`, `notic_beg_dt`, `notic_end_dt`, `create_dt`, `update_dt`)
-VALUES ('COVID-19 Insurance', 'Bank launched an insurance policy which will cover COVID-19 expenses. Please reach out to the branch for more details',
+VALUES ('COVID-19 Insurance', 'EazyBank launched an insurance policy which will cover COVID-19 expenses. Please reach out to the branch for more details',
 CURDATE() - INTERVAL 30 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE(), null);
 
 CREATE TABLE `contact_messages` (
@@ -165,3 +165,32 @@ CREATE TABLE `contact_messages` (
   `create_dt` date DEFAULT NULL,
   PRIMARY KEY (`contact_id`)
 );
+
+CREATE TABLE `authorities` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+);
+
+INSERT INTO `authorities` (`customer_id`, `name`)
+ VALUES (1, 'VIEWACCOUNT');
+
+INSERT INTO `authorities` (`customer_id`, `name`)
+ VALUES (1, 'VIEWCARDS');
+
+ INSERT INTO `authorities` (`customer_id`, `name`)
+  VALUES (1, 'VIEWLOANS');
+
+ INSERT INTO `authorities` (`customer_id`, `name`)
+   VALUES (1, 'VIEWBALANCE');
+
+ DELETE FROM `authorities`;
+
+ INSERT INTO `authorities` (`customer_id`, `name`)
+  VALUES (1, 'ROLE_USER');
+
+ INSERT INTO `authorities` (`customer_id`, `name`)
+  VALUES (1, 'ROLE_ADMIN');
