@@ -1,6 +1,7 @@
 package com.rahul.BankWebApp.config;
 
 import com.rahul.BankWebApp.filter.AuthoritiesLoggingAfterFilter;
+import com.rahul.BankWebApp.filter.AuthoritiesLoggingAtFilter;
 import com.rahul.BankWebApp.filter.CsrfCookieFilter;
 import com.rahul.BankWebApp.filter.RequestValidationBeforeFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,6 +49,7 @@ public class ProjectSecurityConfig {
                 //inject custom filter(RequestValidator) before basic method
                 .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
+                .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
                        /* .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
                         .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
