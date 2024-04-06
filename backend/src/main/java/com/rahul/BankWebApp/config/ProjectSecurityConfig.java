@@ -1,9 +1,6 @@
 package com.rahul.BankWebApp.config;
 
-import com.rahul.BankWebApp.filter.AuthoritiesLoggingAfterFilter;
-import com.rahul.BankWebApp.filter.AuthoritiesLoggingAtFilter;
-import com.rahul.BankWebApp.filter.CsrfCookieFilter;
-import com.rahul.BankWebApp.filter.RequestValidationBeforeFilter;
+import com.rahul.BankWebApp.filter.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +16,7 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -29,9 +27,7 @@ public class ProjectSecurityConfig {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
 
-        http.securityContext((context) -> context
-                        .requireExplicitSave(false))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -40,6 +36,7 @@ public class ProjectSecurityConfig {
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setExposedHeaders(Arrays.asList("Authorization"));
                         config.setMaxAge(3600L);
                         return config;
                     }
@@ -47,16 +44,19 @@ public class ProjectSecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 //inject custom filter(RequestValidator) before basic method
-                .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
-                .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
+                // .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                //inject custom filter(RequestValidator) after basic method
+                // .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
+                // .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                       /* .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
-                        .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
-                        .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
-                        .requestMatchers("/myCards").hasAuthority("VIEWCARDS")*/
+                        /* .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+                         .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
+                         .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
+                         .requestMatchers("/myCards").hasAuthority("VIEWCARDS")*/
                         .requestMatchers("/myAccount").hasRole("USER")
-                        .requestMatchers("/myBalance").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/myLoans").hasRole("USER")
                         .requestMatchers("/myCards").hasRole("USER")
                         .requestMatchers("/user").authenticated()
