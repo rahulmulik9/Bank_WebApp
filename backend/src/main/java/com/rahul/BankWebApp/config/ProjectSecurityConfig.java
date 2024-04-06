@@ -1,9 +1,6 @@
 package com.rahul.BankWebApp.config;
 
-import com.rahul.BankWebApp.filter.AuthoritiesLoggingAfterFilter;
-import com.rahul.BankWebApp.filter.AuthoritiesLoggingAtFilter;
-import com.rahul.BankWebApp.filter.CsrfCookieFilter;
-import com.rahul.BankWebApp.filter.RequestValidationBeforeFilter;
+import com.rahul.BankWebApp.filter.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,9 +44,10 @@ public class ProjectSecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 //inject custom filter(RequestValidator) before basic method
-                .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
-                .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
+               // .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+               // .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
+               // .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
                        /* .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
                         .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
