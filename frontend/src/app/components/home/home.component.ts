@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-home',   //    when app-home is selected then Home.component,html is selectd
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
