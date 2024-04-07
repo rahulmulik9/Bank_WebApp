@@ -19,7 +19,7 @@ public class LoansController {
     private LoanRepository loanRepository;
 
     @GetMapping("/myLoans")
-    @PostAuthorize("hasRole('USER')")    //post authorize
+   // @PostAuthorize("hasRole('USER')")    //post authorize
 
     public List<Loans> getLoanDetails(@RequestParam int id) {
         List<Loans> loans = loanRepository.findByCustomerIdOrderByStartDtDesc(id);
