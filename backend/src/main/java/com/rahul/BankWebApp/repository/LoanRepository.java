@@ -11,7 +11,7 @@ import com.rahul.BankWebApp.model.Loans;
 @Repository
 public interface LoanRepository extends CrudRepository<Loans, Long> {
 
-	@PreAuthorize("hasRole('USER')")
+	//@PreAuthorize("hasRole('USER')")
 	List<Loans> findByCustomerIdOrderByStartDtDesc(int customerId);
 
 }
