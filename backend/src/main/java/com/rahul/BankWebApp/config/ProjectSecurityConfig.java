@@ -58,6 +58,7 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/myAccount").hasRole("USER")
                         .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/myLoans").hasRole("USER")
+                        //.requestMatchers("/myLoans").authenticated()                 //use authenticated for pre Method leve security . so api will be annotated as preAuthorise or PostAuthorize
                         .requestMatchers("/myCards").hasRole("USER")
                         .requestMatchers("/user").authenticated()
                         .requestMatchers("/notices", "/contact", "/register").permitAll())
